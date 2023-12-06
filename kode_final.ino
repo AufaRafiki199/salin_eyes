@@ -21,14 +21,14 @@ X509List cert(TELEGRAM_CERTIFICATE_ROOT);
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 
-const int sensorPhPin = 32;   // Change to the GPIO pin for pH sensor on ESP32
-const int sensorSaltPin = 4; // Change to the GPIO pin for salt sensor on ESP32
-const int pinSiramAir = 16;
-float Po = 0;
+const int sensorSaltPin = 32; // Change to the GPIO pin for salt sensor on ESP32
+const int pinSiramAir = 26;
+const int pinSiramPupuk = 27;
 
 void setup() {
   pinMode(sensorSaltPin, INPUT);
   pinMode(pinSiramAir, OUTPUT);
+  pinMode(pinSiramPupuk, OUTPUT);
   Serial.begin(115200);
 
 #ifdef ESP8266
@@ -64,38 +64,21 @@ void loop() {
       }
 
       String text = bot.messages[i].text;
-      if (text == "/get_ph") {
-        float phValue = measurePH();
-        String response = "Current pH value: " + String(phValue, 3);
-        bot.sendMessage(chat_id, response, "");
-      } else if (text == "/get_salt") {
+      if (text == "/get_salt") {
         float saltValue = measureSalt();
         String response = "Current salt value: " + String(saltValue, 3) + "ppm";
         bot.sendMessage(chat_id, response, "");
       } else if (text == "/siram_air") {
         String siramValue = siramAir();
         bot.sendMessage(chat_id, siramValue, "");
+      } else if (text == "/siram_pupuk") {
+        String siramValue = siramPupuk();
+        bot.sendMessage(chat_id, siramValue, "");
       }
     }
   }
 
   delay(1000); // Adjust the delay based on your needs
-}
-
-float measurePH() {
-  int measurementPh = analogRead(sensorPhPin);
-  Serial.print("ADC Value pH: ");
-  Serial.println(measurementPh);
-  float voltagePh = (measurementPh / 4095.0) * 3.3;  // Calculate voltage from ADC value
-  Serial.print("Voltage pH: ");
-  Serial.println(voltagePh, 3);
-
-  // Modify the pH value calculation formula according to the new voltage reference
-  Po = 7.00 + ((2.6 - voltagePh) / 0.17);
-
-  Serial.print("Liquid pH Value: ");
-  Serial.println(Po, 3);
-  return Po;
 }
 
 float measureSalt() {
@@ -125,6 +108,19 @@ String siramAir() {
 
   // Menonaktifkan siram air
   digitalWrite(pinSiramAir, LOW);
+
+  return "Berhasil menyiram";
+}
+
+String siramPupuk() {
+  // Mengaktifkan siram Pupuk (misalnya, memberikan tegangan tinggi ke pin siram Pupuk)
+  digitalWrite(pinSiramPupuk, HIGH);
+
+  // Menunda selama beberapa waktu (sesuai kebutuhan aplikasi Anda)
+  delay(5000);  // Contoh: Siram Pupuk selama 5 detik
+
+  // Menonaktifkan siram Pupuk
+  digitalWrite(pinSiramPupuk, LOW);
 
   return "Berhasil menyiram";
 }
