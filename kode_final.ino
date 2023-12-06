@@ -66,7 +66,7 @@ void loop() {
       String text = bot.messages[i].text;
       if (text == "/get_salt") {
         float saltValue = measureSalt();
-        String response = "Current salt value: " + String(saltValue, 3) + "ppm";
+        String response = "Current salt value: " + String(saltValue, 3) + " PPM";
         bot.sendMessage(chat_id, response, "");
       } else if (text == "/siram_air") {
         String siramValue = siramAir();
@@ -109,7 +109,7 @@ String siramAir() {
   // Menonaktifkan siram air
   digitalWrite(pinSiramAir, LOW);
 
-  return "Berhasil menyiram";
+  return "Berhasil menyiram air";
 }
 
 String siramPupuk() {
@@ -122,5 +122,5 @@ String siramPupuk() {
   // Menonaktifkan siram Pupuk
   digitalWrite(pinSiramPupuk, LOW);
 
-  return "Berhasil menyiram";
+  return "Berhasil menyiram pupuk";
 }
