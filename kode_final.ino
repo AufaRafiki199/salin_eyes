@@ -125,16 +125,22 @@ void loop() {
         String response2 = "Kesimpulannya: " + kelompokModusValueTDS;
         bot.sendMessage(chat_id, response2, "");
       } else if (text == "/siram_air") {
+        String status = "Mulai menyiram air";
+        bot.sendMessage(chat_id, status, "");
+        
         String siramValue = siramAir();
         bot.sendMessage(chat_id, siramValue, "");
       } else if (text == "/siram_pupuk") {
+        String status = "Mulai menyiram pupuk";
+        bot.sendMessage(chat_id, status, "");
+
         String siramValue = siramPupuk();
         bot.sendMessage(chat_id, siramValue, "");
       }
     }
   }
 
-  delay(1000); // Adjust the delay based on your needs
+  delay(500); // Adjust the delay based on your needs
 }
 
 float measureSalt1() {
